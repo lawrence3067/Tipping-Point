@@ -38,7 +38,25 @@ void updateItzMacro()
   {
     itzButtonCount = 1;
   }
+  else if(controller.getDigital(ControllerDigital::left) == 1)
+  {
+    itzButtonCount = 3;
+  }
 
+  switch (itzButtonCount)
+  {
+  case 1:
+    itz_lift.moveVelocity(itzPID(330));
+    pros::c::adi_digital_write(pneumaticLeftPort, LOW);
+    break;
+  case 2:
+    itz_lift.moveVelocity(itzPID(50));
+    pros::c::adi_digital_write(pneumaticLeftPort, HIGH);
+    break;
+  case 3:
+    itz_lift.moveVelocity(itzPID(0));
+  }
+/**
   if (itzButtonCount == 2)
   {
     itz_lift.moveVelocity(itzPID(50));
@@ -47,4 +65,5 @@ void updateItzMacro()
   {
     itz_lift.moveVelocity(itzPID(330));
   }
+  **/
 }
