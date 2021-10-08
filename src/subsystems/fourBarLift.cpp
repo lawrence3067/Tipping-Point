@@ -4,7 +4,6 @@ using namespace okapi;
 
 Motor fourBarLift(fourBarLiftPort, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
-double setpoint;
 int liftButtonCount;
 
 typedef struct PID pid;
@@ -27,22 +26,7 @@ double PIDFourBar(double setpoint)
   return FB.power;
 }
 
-
-void updateFourBarLift()
-{
-  if (controller.getDigital(ControllerDigital::L1) == 0 && controller.getDigital(ControllerDigital::L2) == 0)
-  {
-    setpoint = fourBarLift.getPosition();
-    fourBarLift.moveVelocity(PIDFourBar(setpoint));
-  }
-  else
-  {
-    fourBarLift.moveVelocity(100 * (controller.getDigital(ControllerDigital::L1) - controller.getDigital(ControllerDigital::L2)));
-  }
-}
-
-
-void updateFourMacro()
+void updateFourBarMacro()
 {
   if (controller.getDigital(ControllerDigital::L1) == 1)
   {
@@ -51,25 +35,37 @@ void updateFourMacro()
 
   else if(controller.getDigital(ControllerDigital::L2) == 1)
   {
-
     liftButtonCount = 1;
     if(liftButtonCount > 1){
       liftButtonCount = 1;
     }
   }
-
-
-
+  
+  switch (liftButtonCount)
+  {
+  case 1:
+    fourBarLift.moveVelocity(PIDFourBar(0));
+    liftButtonCount += 1;
+    break;
+  case 2:
+    fourBarLift.moveVelocity(PIDFourBar(300));
+    break;
+  case 3:
+    fourBarLift.moveVelocity(PIDFourBar(800));
+    break;
+  }
+  /**
   if (liftButtonCount == 3)
   {
-    fourBarLift.moveVelocity(PIDFourBar(800)); //highest position
+    fourBarLift.moveVelocity(PIDFourBar(800));
   }
   else if(liftButtonCount == 2){
-    fourBarLift.moveVelocity(PIDFourBar(100));
+    fourBarLift.moveVelocity(PIDFourBar(250));
   }
   else if (liftButtonCount == 1)
   {
-    fourBarLift.moveVelocity(PIDFourBar(0));//was 0
+    fourBarLift.moveVelocity(PIDFourBar(0));
     liftButtonCount+=1;
   }
+  **/
 }
