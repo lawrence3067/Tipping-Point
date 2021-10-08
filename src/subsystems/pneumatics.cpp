@@ -4,7 +4,7 @@ void updatePneumatics()
 {
    if (controller.getDigital(ControllerDigital::B) == 1)
    {
-     pros::c::adi_digital_write(pneumaticLeftPort, LOW);
+     pros::lcd::set_text(2, "YOUR MOM");
    }
    else
    {
