@@ -15,4 +15,5 @@ struct PID
   float integral;
   float derivative;
   float power;
+  float speed;
 };
