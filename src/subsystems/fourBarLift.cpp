@@ -14,7 +14,7 @@ double PIDFourBar(double setpoint)
 {
   FB.kP = 0.5;
   FB.kI = 0;
-  FB.kD = 0.2;
+  FB.kD = 0.05;
 
   FB.target = setpoint;
   FB.error = FB.target - fourBarLift.getPosition();
@@ -40,7 +40,7 @@ void updateFourBarMacro()
       liftButtonCount = 1;
     }
   }
-  
+
   switch (liftButtonCount)
   {
   case 1:
@@ -48,7 +48,7 @@ void updateFourBarMacro()
     liftButtonCount += 1;
     break;
   case 2:
-    fourBarLift.moveVelocity(PIDFourBar(300));
+    fourBarLift.moveVelocity(PIDFourBar(250));
     break;
   case 3:
     fourBarLift.moveVelocity(PIDFourBar(800));
