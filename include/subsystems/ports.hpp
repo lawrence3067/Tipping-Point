@@ -14,8 +14,8 @@ const int fourBarLiftPort = 15;
 const int rollerPort = 16;
 
 //Pneumatic Ports
-
 const char pneumaticLeftPort = 'G';
-//const char pneumaticRightPort = 'D';
 
-const int imuPort = 13  ;
+const int imuPort = 14;
+const char encoderTop = 'E';
+const char encoderBottom = 'F';
