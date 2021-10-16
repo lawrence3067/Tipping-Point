@@ -43,16 +43,16 @@ void translatePID(double leftDistance, double rightDistance)
 
 	while (true)
 	{
-		translate.error = translate.target - (drive -> getModel() -> getSensorVals()[0] + drive -> getModel() -> getSensorVals()[1])/2;
+		translate.error = translate.target - ((drive -> getModel() -> getSensorVals()[0] + drive -> getModel() -> getSensorVals()[1])/2 * 6 / 5 * 3 / 7);
 		translate.power = translateController.step(translate.error);
 
 		drive -> getModel() -> tank(-translate.power, -translate.power);
-    //pros::lcd::set_text(2, std::to_string(translate.error));
 
 		if (abs(translate.error) < 10)
 		{
 			break;
 		}
+
 		pros::delay(10);
 	}
 	drive -> getModel() -> tank(0, 0);
