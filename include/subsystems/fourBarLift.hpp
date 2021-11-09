@@ -4,6 +4,6 @@ using namespace okapi;
 
 extern Motor fourBarLift;
 
-void updateFourBarMacro();
+void updateFourBarLiftMacro();
 
-double PIDFourBar(double setpoint);
+double fourBarPID(double setpoint);
