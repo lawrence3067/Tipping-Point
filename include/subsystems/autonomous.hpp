@@ -2,4 +2,6 @@
 
 using namespace okapi;
 
-void awpAuton();
+void rightAuton();
+
+void leftAuton();
