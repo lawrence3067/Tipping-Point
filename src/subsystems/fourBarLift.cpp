@@ -10,7 +10,7 @@ typedef struct PID pid;
 
 pid FB;
 
-double PIDFourBar(double setpoint)
+double fourBarPID(double setpoint)
 {
   FB.kP = 0.5;
   FB.kI = 0;
@@ -20,52 +20,37 @@ double PIDFourBar(double setpoint)
   FB.error = FB.target - fourBarLift.getPosition();
   FB.integral += FB.error;
   FB.derivative = FB.error - FB.prevError;
-
   FB.power = FB.kP * FB.error + FB.kI * FB.integral + FB.kD * FB.derivative;
 
   return FB.power;
 }
 
-void updateFourBarMacro()
+void updateFourBarLiftMacro()
 {
   if (controller.getDigital(ControllerDigital::L1) == 1)
   {
-    liftButtonCount = 3;
+    liftButtonCount = 1;
   }
 
   else if(controller.getDigital(ControllerDigital::L2) == 1)
   {
-    liftButtonCount = 1;
-    if(liftButtonCount > 1){
-      liftButtonCount = 1;
-    }
+    liftButtonCount = 2;
+  }
+
+  if (controller.getDigital(ControllerDigital::A) == 1)
+  {
+    liftButtonCount = 3;
   }
 
   switch (liftButtonCount)
   {
   case 1:
-    fourBarLift.moveVelocity(PIDFourBar(0));
-    liftButtonCount += 1;
+    fourBarLift.moveVelocity(fourBarPID(-800));
     break;
   case 2:
-    fourBarLift.moveVelocity(PIDFourBar(250));
+    fourBarLift.moveVelocity(fourBarPID(50));
     break;
   case 3:
-    fourBarLift.moveVelocity(PIDFourBar(800));
-    break;
+    fourBarLift.moveVelocity(fourBarPID(-350));
   }
-  /**
-  if (liftButtonCount == 3)
-  {
-    fourBarLift.moveVelocity(PIDFourBar(800));
-  }
-  else if(liftButtonCount == 2){
-    fourBarLift.moveVelocity(PIDFourBar(250));
-  }
-  else if (liftButtonCount == 1)
-  {
-    fourBarLift.moveVelocity(PIDFourBar(0));
-    liftButtonCount+=1;
-  }
-  **/
 }
