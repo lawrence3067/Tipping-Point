@@ -2,12 +2,12 @@
 
 void updatePneumatics()
 {
-   if (controller.getDigital(ControllerDigital::B) == 1)
+   if (controller.getDigital(ControllerDigital::up) == 1)
    {
-     pros::lcd::set_text(2, "YOUR MOM");
+     pros::c::adi_digital_write(pneumaticPort, HIGH);
    }
-   else
+   else if (controller.getDigital(ControllerDigital::down) == 1)
    {
-     pros::c::adi_digital_write(pneumaticLeftPort, HIGH);
+     pros::c::adi_digital_write(pneumaticPort, LOW);
    }
 }
