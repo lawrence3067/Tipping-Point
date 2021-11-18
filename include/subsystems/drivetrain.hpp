@@ -7,8 +7,8 @@ extern Motor leftFront;
 extern Motor rightBack;
 extern Motor rightFront;
 
-void updateDrive();
-
-void translatePID(double leftDistance, double rightDistance);
+void translatePID(double distance);
 
 void rotatePID(double turnDegrees);
+
+void jankRotatePID(double leftDistance, double rightDistance);
