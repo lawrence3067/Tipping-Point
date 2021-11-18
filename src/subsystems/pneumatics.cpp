@@ -1,12 +1,12 @@
 #include "main.h"
 
-void updatePneumatics()
+void updatePneumatics(bool state)
 {
-   if (controller.getDigital(ControllerDigital::up) == 1)
+   if (state == false)
    {
      pros::c::adi_digital_write(pneumaticPort, HIGH);
    }
-   else if (controller.getDigital(ControllerDigital::down) == 1)
+   else if (state == true)
    {
      pros::c::adi_digital_write(pneumaticPort, LOW);
    }
