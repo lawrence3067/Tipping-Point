@@ -5,6 +5,7 @@ const int rightFrontPort = 9;
 const int rightBackPort = 18;
 const int leftFrontPort = 10;
 const int leftBackPort = 12;
+const int IMUPort = 4;
 
 //Lift Ports
 const int fourBarLiftPort = 15;
