@@ -6,6 +6,7 @@ Motor rightFront(rightFrontPort, false, AbstractMotor::gearset::blue, AbstractMo
 Motor rightBack(rightBackPort, false, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
 Motor leftFront(leftFrontPort, true, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
 Motor leftBack(leftBackPort, true, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
+IMU inertial_sensor(IMUPort, IMUAxes::z);
 
 std::shared_ptr<ChassisController> drive =
   ChassisControllerBuilder()
@@ -17,22 +18,35 @@ typedef struct PID pid;
 
 pid translate;
 pid rotate;
+pid jankLeft;
+pid jankRight;
 
-void updateDrive()
-{
-  drive -> getModel() -> tank(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightY));
-}
+double inertial_values;
+double error;
+double threshold;
+double integral;
+double derivative;
+double prevError;
+double kP;
+double ki;
+double kd;
+double p;
+double i;
+double d;
+double vel;
+double inertial_value;
 
-void translatePID(double leftDistance, double rightDistance)
+void translatePID(double distance)
 {
+  inertial_sensor.reset();
 	drive -> getModel() -> setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
-	translate.target = leftDistance * (360 / (2 * 3.1415 * (4 / 2)));
+	translate.target = distance * (360 / (2 * 3.1415 * (4 / 2)));
 
 	//PID constants
-	translate.kP = 0.001575;
-	translate.kI = 0.0015;
-	translate.kD = 0.00015;
+	translate.kP = 0.000575; //.002075
+	translate.kI = 0.05; //0.05
+	translate.kD = 0.0002;
 
 	auto translateController = IterativeControllerFactory::posPID(translate.kP, translate.kI, translate.kD);
 
@@ -40,73 +54,103 @@ void translatePID(double leftDistance, double rightDistance)
 
 	while (true)
 	{
+
+    inertial_value = inertial_sensor.get();
 		translate.error = translate.target - ((drive -> getModel() -> getSensorVals()[0] + drive -> getModel() -> getSensorVals()[1])/2 * 18 / 35);
 		translate.power = translateController.step(translate.error);
 
-		drive -> getModel() -> tank(-translate.power, -translate.power);
+    if (inertial_value > 0 && distance > 0)
+    {
+      drive -> getModel() -> tank(-translate.power, abs(translate.power) + inertial_value * 0.012);
+    }
+    else if (inertial_value < 0 && distance > 0)
+    {
+      drive -> getModel() -> tank(abs(translate.power) + inertial_value * 0.012, -translate.power);
+    }
+    else
+    {
+      drive -> getModel() -> tank(-translate.power, -translate.power);
+    }
 
-    pros::lcd::set_text(2, std::to_string(translate.error));
-
-		if (abs(translate.error) < 10)
+		if (abs(translate.error) < 12)
 		{
 			break;
 		}
 
 		pros::delay(10);
 	}
+
 	drive -> getModel() -> tank(0, 0);
 }
 
-void rotatePID(double turnDegrees)
+void rotatePID(double target)
 {
-  double wheelLeft;
-  double wheelRight;
+  inertial_sensor.reset();
+  error = target - inertial_sensor.get();
+  threshold = 2; //2
+  kP = 1.6; //0.8
+  ki = 0.02;
+  kd = 0.03; //3.5
 
-  double leftVals;
-  double rightVals;
+  while (true)
+  {
+    error = target - inertial_sensor.get();
+    integral = integral + error;
+    derivative = error - prevError;
+    prevError = error;
+    p = error * kP;
+    i = error * ki;
+    d = error * kd;
 
-  double deltaLeft;
-  double deltaRight;
+    vel = p + i + d;
 
-  double prevLeftVals;
-  double prevRightVals;
+    rightFront.moveVelocity(-vel);
+    leftFront.moveVelocity(vel);
+    rightBack.moveVelocity(-vel);
+    leftBack.moveVelocity(vel);
 
-  double newTheta;
+    if(abs(error) < threshold)
+    {
+      break;
+    }
 
-  rotate.kP = 0.001575;   //0.001575
-	rotate.kI = 0.0015; //0.0015
-	rotate.kD = 0.00015; //0.00015
+    pros::delay(10);
+  }
+  drive -> getModel() -> tank(0, 0);
+
+}
+
+void jankRotatePID(double leftDistance, double rightDistance)
+{
+  jankLeft.target = leftDistance * 360 / (4 * M_PI);
+  jankRight.target - rightDistance * 360 / (4 * M_PI);
+
+  jankLeft.kP = 0.000775;
+  jankLeft.kI = 0.05;
+  jankLeft.kD = 0.0004;
+
+  auto jankLeftController = IterativeControllerFactory::posPID(jankLeft.kP, jankLeft.kI, jankLeft.kD);
+  auto jankRightController = IterativeControllerFactory::posPID(jankLeft.kP, jankLeft.kI, jankLeft.kD);
 
   drive -> getModel() -> resetSensors();
 
   while (true)
   {
-    leftVals = (drive -> getModel() -> getSensorVals()[0]) * 18 / 35;   //corrects gear ratio and shit motor encoders
-    rightVals = (drive -> getModel() -> getSensorVals()[1]) * 18 / 35;
+    jankLeft.error = jankLeft.target - drive -> getModel() -> getSensorVals()[0];
+    jankRight.error = jankRight.target - drive -> getModel() -> getSensorVals()[1];
 
-    leftVals = leftVals * 4 * M_PI / 360;     //converts degrees to inches
-    rightVals = rightVals * 4 * M_PI / 360;
+    jankLeft.power = jankLeftController.step(jankLeft.error);
+    jankRight.power = jankRightController.step(jankRight.error);
 
-    newTheta = (leftVals - rightVals) / (6 + 6); //calculates angle change
-    newTheta = newTheta / M_PI * 180;   //converts from radians to degrees
+    drive -> getModel() -> tank(-jankLeft.power, -jankRight.power);
 
-    rotate.target = turnDegrees;
-    rotate.error = rotate.target - newTheta;
-    pros::lcd::set_text(3, std::to_string(rotate.error));
-    rotate.integral += rotate.error;
-    rotate.derivative = rotate.error - rotate.prevError;
-    rotate.power = (rotate.kP * rotate.error) + (rotate.kI * rotate.integral) + (rotate.kD * rotate.derivative);
-
-    if (abs(rotate.error) < 1)
+    if (abs(jankLeft.error) < 1 && abs(jankRight.error) < 1)
     {
       break;
     }
-
-    drive -> getModel() -> tank(rotate.power, -rotate.power);
-
     pros::delay(10);
-
   }
 
   drive -> getModel() -> tank(0, 0);
+
 }
