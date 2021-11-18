@@ -2,6 +2,6 @@
 
 using namespace okapi;
 
-void rightAuton();
+void skillsHard();
 
-void leftAuton();
+void skillsBackup();
