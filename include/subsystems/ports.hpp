@@ -8,7 +8,8 @@ const int leftBackPort = 12;
 const int IMUPort = 4;
 
 //Lift Ports
-const int fourBarLiftPort = 15;
+const int fourBarLiftPort = 16;
+const int fourBarLiftPort2 = 1;
 const int twoBarLiftPort = 13;
 
 //Pneumatic Ports
