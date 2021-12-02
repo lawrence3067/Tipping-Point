@@ -4,4 +4,8 @@ using namespace okapi;
 
 void skillsHard();
 
-void skillsBackup();
+void skillsPush();
+
+void skillsPlatform();
+
+void test();
