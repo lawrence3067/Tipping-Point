@@ -1,31 +1,28 @@
 #include "main.h"
 
 //drivetrain ports
-const int rightFrontPort = 0;
-const int rightTopPort = 0;
-const int rightBottomPort = 0;
+const int rightFrontPort = 21;
+const int rightTopPort = 12;
+const int rightBottomPort = 3;
 
-const int leftFrontPort = 0;
-const int leftTopPort = 0;
-const int leftBottomPort = 0;
+const int leftFrontPort = 20;
+const int leftTopPort = 9;
+const int leftBottomPort = 2;
 
 //lift port
-const int fourBarPort = 0;
+const int fourBarPort = 1;
 
 //conveyor port
-const int conveyorPort = 0;
+const int conveyorPort = 13;
 
-//tilter pneumatic port
-const char rightTilterPort = 'A';
-const char leftTilterPort = 'B';
+//sensor ports
+const int visionPort = 0;
+const int inertialPort = 16;
+const int inertial2Port = 17;
 
 //pneumatic clamp ports
-const char tilterClampPort = 'C';
-const char fourBarClampPort = 'D';
+const char fourBarClampPort = 'A';
+const char tilterClampPort = 'B';
 
-//encoder ports
-const char leftEncoder1 = 'E';
-const char leftEncoder2 = 'F';
-
-const char rightEncoder1 = 'G';
-const char rightEncoder2 = 'H';
+//tilter pneumatic port
+const char tilterPort = 'C';
