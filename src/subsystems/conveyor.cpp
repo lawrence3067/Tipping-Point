@@ -16,14 +16,21 @@ void updateConveyor()
   {
     conveyorState = 2;
   }
+  else
+  {
+    conveyorState = 3;
+  }
 
   switch (conveyorState)
   {
     case 1:
-      conveyor.moveVelocity(200);
+      conveyor.moveVelocity(150);
       break;
     case 2:
-      conveyor.moveVelocity(-200);
+      conveyor.moveVelocity(-150);
+      break;
+    case 3:
+      conveyor.moveVelocity(0);
       break;
   }
 }
