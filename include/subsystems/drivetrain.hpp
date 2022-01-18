@@ -11,3 +11,5 @@ extern Motor leftTop;
 extern Motor leftBottom;
 
 void updateDrive();
+void rotatePID(double angle, int ms);
+void translatePID(double distance, int ms);
