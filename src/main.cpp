@@ -22,13 +22,18 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
 void initialize()
 {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 
-	pros::c::adi_pin_mode(rightTilterPort, OUTPUT);
-	pros::c::adi_pin_mode(leftTilterPort, OUTPUT);
+	IMU inertialSensor(inertialPort, IMUAxes::z);
+	IMU inertialSensor2(inertial2Port, IMUAxes::z);
+	inertialSensor.calibrate();
+	inertialSensor2.calibrate();
+
+	pros::c::adi_pin_mode(tilterPort, OUTPUT);
 	pros::c::adi_pin_mode(tilterClampPort, OUTPUT);
 	pros::c::adi_pin_mode(fourBarClampPort, OUTPUT);
 
@@ -66,7 +71,14 @@ void competition_initialize() {}
  */
 void autonomous()
 {
+	pros::c::adi_digital_write(tilterClampPort, HIGH);
+	//rightAutonWP();
+	//skills();
+	//rightAuton();
 
+	leftAutonWP();
+	//skills();
+	//leftAuton();
 }
 
 /**
@@ -86,13 +98,15 @@ void opcontrol()
 {
 	while (true)
 	{
+		//updateVision();
 		updateDrive();
 		updateFourBar();
 		updateTilter();
 		updateConveyor();
 		updateFourBarClamp();
-		updateTilterClamp();
+
 
 		pros::delay(10);
 	}
 }
+
