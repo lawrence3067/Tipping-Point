@@ -1,6 +1,12 @@
 #include "main.h"
+#include <cmath>
 
 using namespace okapi;
+using namespace okapi::literals;
+
+QAngle curAngle = 90_deg;
+QVector<QLength> pos;
+QVector<Number> heading;
 
 Motor rightFront(rightFrontPort, false, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
 Motor rightTop(rightTopPort, true, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
@@ -35,7 +41,7 @@ double addValue;
 std::shared_ptr<OdomChassisController> drive =
   ChassisControllerBuilder()
   .withMotors({leftFront, leftTop, leftBottom}, {rightFront, rightTop, rightBottom})
-  .withDimensions(AbstractMotor::gearset::blue, {{4_in, 13.25_in}, imev5BlueTPR})
+  .withDimensions(AbstractMotor::gearset::blue, {{4_in, 13.7_in}, imev5BlueTPR})
   .withOdometry()
   .buildOdometry();
 
@@ -134,3 +140,24 @@ void translatePID(double distance, int ms)
 
 	drive -> getModel() -> tank(0, 0);
 }
+
+void update() {
+
+  QLength distL = 2_in * ((drive -> getModel() -> getSensorVals()[0]).get() - lPrev) / 180.0 * PI; // encoders measure things in degrees, so first convert to radians to get the distance that wheel has turned
+  QLength distR = 2_in * (((drive -> getModel() -> getSensorVals()[1]) * 3 / 7).get() - rPrev) / 180.0 * PI;
+  // QLength distM = 2_in * (midEnc.get() - mPrev) / 180.0 * PI;
+  QLength forward = (distL + distR) / 2;
+  QAngle dtheta = (distR - distL) / 13.7_in * radian; // small angle
+  pos += forward * heading;
+  curAngle += dtheta; // change angle
+		// curAngle = fmod(curAngle.convert(radian) + 2 * PI, 2 * PI) * radian;
+	heading = QVector<Number>(curAngle); // heading also changes
+  // QLength side = distM - CHASSIS_RATIO * (distR - distL) / 2; // CHASSIS_RATIO is the ratio of the width of chassis to the distance of the middle wheel from the center of the bot
+  lPrev = (drive -> getModel() -> getSensorVals()[0]); //removed the .get()
+	rPrev = ((drive -> getModel() -> getSensorVals()[1]) * 3 / 7); //removed the .get()
+
+}
+
+// void moveOdom() {
+//
+// }
