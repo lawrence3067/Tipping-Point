@@ -76,7 +76,7 @@ void autonomous()
 	//skills();
 	//rightAuton();
 
-	leftAutonWP();
+	// leftAutonWP();
 	//skills();
 	//leftAuton();
 }
@@ -99,14 +99,15 @@ void opcontrol()
 	while (true)
 	{
 		//updateVision();
-		updateDrive();
-		updateFourBar();
-		updateTilter();
-		updateConveyor();
-		updateFourBarClamp();
-
+		// updateDrive();
+		// updateFourBar();
+		// updateTilter();
+		// updateConveyor();
+		// updateFourBarClamp();
+		update();
+		pros::lcd::set_text(3, std::to_string(rightFront.getPosition()));
+		pros::lcd::set_text(4, std::to_string(leftFront.getPosition()));
 
 		pros::delay(10);
 	}
 }
-
