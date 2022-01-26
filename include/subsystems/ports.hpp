@@ -22,7 +22,7 @@ const int inertial2Port = 17;
 
 //pneumatic clamp ports
 const char fourBarClampPort = 'A';
-const char tilterClampPort = 'B';
+const char tilterClampPort = 'C';
 
 //tilter pneumatic port
-const char tilterPort = 'C';
+const char tilterPort = 'B';
