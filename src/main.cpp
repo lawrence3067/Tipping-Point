@@ -28,14 +28,8 @@ void initialize()
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 
-	IMU inertialSensor(inertialPort, IMUAxes::z);
-	IMU inertialSensor2(inertial2Port, IMUAxes::z);
 	inertialSensor.calibrate();
 	inertialSensor2.calibrate();
-
-	pros::c::adi_pin_mode(tilterPort, OUTPUT);
-	pros::c::adi_pin_mode(tilterClampPort, OUTPUT);
-	pros::c::adi_pin_mode(fourBarClampPort, OUTPUT);
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -73,12 +67,12 @@ void autonomous()
 {
 	pros::c::adi_digital_write(tilterClampPort, HIGH);
 	//rightAutonWP();
-	//skills();
 	//rightAuton();
 
-	// leftAutonWP();
+	//leftAutonWP();
 	//skills();
 	//leftAuton();
+	test();
 }
 
 /**
@@ -99,14 +93,11 @@ void opcontrol()
 	while (true)
 	{
 		//updateVision();
-		// updateDrive();
-		// updateFourBar();
-		// updateTilter();
-		// updateConveyor();
-		// updateFourBarClamp();
-		update();
-		pros::lcd::set_text(3, std::to_string(rightFront.getPosition()));
-		pros::lcd::set_text(4, std::to_string(leftFront.getPosition()));
+		updateDrive();
+		updateFourBar();
+		updateTilter();
+		updateConveyor();
+		updateFourBarClamp();
 
 		pros::delay(10);
 	}
