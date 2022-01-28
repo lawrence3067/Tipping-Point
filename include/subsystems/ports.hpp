@@ -17,12 +17,12 @@ const int conveyorPort = 13;
 
 //sensor ports
 const int visionPort = 0;
-const int inertialPort = 16;
-const int inertial2Port = 17;
+const int inertialPort = 6;
+const int inertial2Port = 5;
+const char fourBarSwitchPort = 'D';
+const char tilterSwitchPort = 'E';
 
-//pneumatic clamp ports
+//pneumatic ports
 const char fourBarClampPort = 'A';
 const char tilterClampPort = 'C';
-
-//tilter pneumatic port
 const char tilterPort = 'B';
