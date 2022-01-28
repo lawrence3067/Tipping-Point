@@ -75,14 +75,17 @@ void opcontrol(void);
 /**
  * You can add C++-only headers here
  */
- #include "subsystems/drivetrain.hpp"
+ #include "subsystems/QVector.hpp"
+ #include "subsystems/drive.hpp"
  #include "subsystems/fourBar.hpp"
  #include "subsystems/tilter.hpp"
  #include "subsystems/clamps.hpp"
  #include "subsystems/conveyor.hpp"
  #include "subsystems/ports.hpp"
  #include "subsystems/globals.hpp"
- #include "motion/QVector.hpp"
+ #include "subsystems/autonomous.hpp"
+ #include "subsystems/visionSensor.hpp"
+ #include "subsystems/odom.hpp"
 //#include <iostream>
 #endif
 
