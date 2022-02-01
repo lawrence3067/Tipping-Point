@@ -16,6 +16,7 @@ IMU inertialSensor2(inertial2Port, IMUAxes::z);
 
 typedef struct PID pid;
 pid translate;
+pid park;
 
 int timer;
 double inertial_values;
@@ -38,7 +39,7 @@ std::shared_ptr<OdomChassisController> drive =
   .withMotors({leftFront, leftTop, leftBottom}, {rightFront, rightTop, rightBottom})
   .withDimensions(AbstractMotor::gearset::blue, {{4_in, 13.7_in}, imev5BlueTPR})
   .withGains(
-    {0.002, 0, 0},
+    {0.0015, 0, 0.000085},
     {0, 0, 0},
     {0, 0, 0}
   )
@@ -139,4 +140,27 @@ void translatePID(double distance, int ms)
 	}
 
 	drive -> getModel() -> tank(0, 0);
+}
+
+void autonPark()
+{
+  inertialSensor2.reset();
+
+  park.kP = 0;
+  park.kI = 0;
+  park.kD = 0;
+
+  auto parkController = IterativeControllerFactory::posPID(park.kP, park.kI, park.kD);
+
+  while (abs(inertialSensor2.get()) > 5)
+  {
+    park.error = inertialSensor2.get();
+    park.power = parkController.step(park.error);
+
+    drive -> getModel() -> tank(-park.power, -park.power);
+
+    pros::delay(10);
+  }
+
+  drive -> getModel() -> tank(0,0);
 }
