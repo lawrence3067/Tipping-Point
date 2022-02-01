@@ -22,45 +22,45 @@ namespace odom
     QLength distR = 2_in * (drive -> getModel() -> getSensorVals()[1] * 18 / 35 - rPrev) / 180.0 * PI;
 
     QLength forward = (distL + distR) / 2;
-    QAngle dtheta = (distR - distL) / 13.7_in * radian; // small angle
+    //QAngle dtheta = (distR - distL) / 13.7_in * radian; // small angle
 
     //update pos
     pos += forward * heading;
-    curAngle += dtheta; // change angle
+    curAngle = inertialSensor.get(); // change angle
 
   	heading = QVector<Number>(curAngle); // heading also changes
     lPrev = drive -> getModel() -> getSensorVals()[0] * 18 / 35;
   	rPrev = drive -> getModel() -> getSensorVals()[1] * 18 / 35;
   }
 
-  void driveToPoint(Point target)
+  void driveToPoint(Point target, bool driveBack)
   {
     QVector<QLength> difference = QVector(target.x, target.y) - pos;
-    QAngle turnAngle = difference.arg();  //gets direction of vector
+    QAngle turnAngle = difference.arg();  //returns direction of vector
     QLength targetDistance = difference.norm(); //returns magnitude of vector
 
     odomRotate(turnAngle);
-    odomTranslate(targetDistance);
+    odomTranslate(targetDistance, driveBack);
   }
 
   void odomRotate(QAngle targetAngle)
   {
-    QAngle inertialVal = inertialSensor.get() / 180 * PI * radian;
+    QAngle inertialVal = (90 - inertialSensor.get()) * degree;
+    targetAngle = targetAngle.convert(radian) * 180 / PI * degree;
 
-    rotate.kP = 0.05;
+    rotate.kP = 0.032;
     rotate.kI = 0;
     rotate.kD = 0.001;
 
-    double differenceAngle;
     auto rotateController = IterativeControllerFactory::posPID(rotate.kP, rotate.kI, rotate.kD);
 
-    while (abs(targetAngle - inertialVal) >= PI / 180 * radian)
+    while (abs(targetAngle - inertialVal) >= 2_deg)
     {
-      pros::lcd::set_text(3, "fatimah broke code");
-      inertialVal = inertialSensor.get() / 180 * PI * radian;
-      rotate.power = rotateController.step((targetAngle - inertialVal).convert(radian));
+      pros::lcd::set_text(3, std::to_string(inertialVal.convert(degree)));
+      inertialVal = (90 - inertialSensor.get()) * degree;
+      rotate.power = rotateController.step((targetAngle - inertialVal).convert(degree));
 
-      drive -> getModel() -> tank(-rotate.power, rotate.power);
+      drive -> getModel() -> tank(rotate.power, -rotate.power);
       update();
 
       pros::delay(10);
@@ -68,7 +68,7 @@ namespace odom
 
     drive -> getModel() -> tank(0, 0);
   }
-
+/**
   void odomTranslate(Point target)
   {
     move.kP = 0;
@@ -92,10 +92,19 @@ namespace odom
     }
 
     drive -> getModel() -> tank(0, 0);
-  }
-  void odomTranslate(QLength targetDistance)
+  }**/
+  void odomTranslate(QLength targetDistance, bool driveBack)
   {
     double targetDegrees = (targetDistance.convert(inch) * 90 / PI) * 35/18;
-    drive -> moveRaw(targetDegrees);
+    if (driveBack == true)
+    {
+      drive -> moveRaw(-targetDegrees);
+    }
+    else
+    {
+      drive -> moveRaw(targetDegrees);
+    }
+    update();
   }
 }
+
