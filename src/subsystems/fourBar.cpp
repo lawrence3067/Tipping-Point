@@ -43,12 +43,13 @@ void updateFourBar()
       fourBarLift.moveVelocity(fourBarMacros(700));
       break;
     case 2:
-      fourBarLift.moveVelocity(fourBarMacros(-20));
+      fourBarLift.moveVelocity(fourBarMacros(0));
       break;
     case 3:
       fourBarLift.moveVelocity(fourBarMacros(500));
       break;
     case 4:
       fourBarLift.moveVelocity(fourBarMacros(550));
+      break;
   }
 }
