@@ -7,12 +7,13 @@ namespace odom
   extern QVector<QLength> pos;
   extern QVector<Number> heading;
   extern QAngle curAngle;
-	extern double rPrev;
-	extern double lPrev;
+  extern double rPrev;
+  extern double lPrev;
 
   extern void updateOdom();
-  extern void driveToPoint(Point target);
+  extern void driveToPoint(Point target, bool driveBack);
   extern void odomRotate(QAngle targetAngle);
-  extern void odomTranslate(QLength targetDistance);
+  extern void odomTranslate(QLength targetDistance, bool driveBack);
   extern void odomDrift();
 }
+
