@@ -2,7 +2,7 @@
 
 using namespace okapi;
 
-Motor conveyor(conveyorPort, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+Motor conveyor(conveyorPort, false, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
 
 int conveyorState;
 
@@ -24,13 +24,14 @@ void updateConveyor()
   switch (conveyorState)
   {
     case 1:
-      conveyor.moveVelocity(150);
+      conveyor.moveVelocity(200);
       break;
     case 2:
-      conveyor.moveVelocity(-150);
+      conveyor.moveVelocity(-200);
       break;
     case 3:
       conveyor.moveVelocity(0);
       break;
   }
 }
+
