@@ -5,7 +5,7 @@ using namespace okapi;
 namespace odom
 {
 
-  QVector<QLength> pos;
+  QVector<QLength> pos; 
 	QVector<Number> heading;
 	QAngle curAngle = 90_deg; // for the sake of speed (technically could just use heading, no accuracy loss)
   QAngle turnAngle;
@@ -95,7 +95,7 @@ namespace odom
       {
         break;
       }
-      pros::delay(10); 
+      pros::delay(10);
     }
 
     drive -> getModel() -> tank(0, 0);
