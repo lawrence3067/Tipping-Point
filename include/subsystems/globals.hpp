@@ -2,11 +2,18 @@
 
 using namespace okapi;
 
-extern Motor leftBackDrive;
-extern Motor leftFrontDrive;
-extern Motor rightBackDrive;
-extern Motor rightFrontDrive;
-
-extern Motor itz_lift;
-
 extern Controller controller;
+
+struct PID
+{
+  float kP;
+  float kI;
+  float kD;
+  float target;
+  float error;
+  float prevError;
+  float integral;
+  float derivative;
+  float power;
+  float speed;
+};

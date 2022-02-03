@@ -1,13 +1,5 @@
 #include "main.h"
 
-using namespace okapi;
-
-std::shared_ptr<ChassisController> drive =
-  ChassisControllerBuilder()
-  .withMotors({-6, -17}, {10, 7})   //MotorGroups for left and right side
-  .withDimensions(AbstractMotor::gearset::blue, {{4_in, 10_in}, imev5BlueTPR})		  //Blue gearset(100 rpm) and wheel dimensions
-  .build();
-
 /**
  * A callback function for LLEMU's center button.
  *
@@ -30,9 +22,14 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
+
+void initialize()
+{
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
+
+	inertialSensor.calibrate();
+	inertialSensor2.calibrate();
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -66,7 +63,17 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous()
+{
+	pros::c::adi_digital_write(tilterClampPort, HIGH);
+	//rightAutonWP();
+	//rightAuton();
+
+	//leftAutonWP();
+	//skills();
+	//leftAuton();
+	test();
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -83,10 +90,14 @@ void autonomous() {}
  */
 void opcontrol()
 {
-	while(true)
+	while (true)
 	{
-		drive -> getModel() -> arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
-		itz_lift_control();
+		//updateVision();
+		updateDrive();
+		updateFourBar();
+		updateTilter();
+		updateConveyor();
+		updateFourBarClamp();
 
 		pros::delay(10);
 	}
