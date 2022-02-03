@@ -120,7 +120,8 @@ void skills(){
 void test()
 {
   inertialSensor.reset();
-  odom::driveToPoint({24_in, 0_in}, false);
-  odom::driveToPoint({24_in, 24_in}, false);
-  odom::driveToPoint({0_in, 24_in}, false);
+  odom::driveToPoint({24_in, 0_in}, false, 1000);
+  odom::driveToPoint({24_in, 24_in}, false, 1000);
+  odom::driveToPoint({0_in, 24_in}, false, 1000);
+  odom::driveToPoint({0_in, 0_in}, false, 1000);
 }

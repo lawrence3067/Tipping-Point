@@ -90,9 +90,10 @@ void autonomous()
  */
 void opcontrol()
 {
+	//autonPark();
+	//test();
 	while (true)
 	{
-		//updateVision();
 		updateDrive();
 		updateFourBar();
 		updateTilter();

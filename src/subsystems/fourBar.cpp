@@ -7,7 +7,7 @@ Motor fourBarLift(fourBarPort, false, AbstractMotor::gearset::red, AbstractMotor
 int liftState;
 double fourBarPower;
 double error;
-auto fourBarController = IterativeControllerFactory::posPID(1.5, 0, 0.001);
+auto fourBarController = IterativeControllerFactory::posPID(1.45, 0, 0.001);
 
 double fourBarMacros(double setpoint)
 {

@@ -16,7 +16,7 @@ void updateTilter()
   else if (controller.getDigital(ControllerDigital::X) == 1 || tilterSwitch.get_new_press() == 1)
   {
     tilterClamp.set_value(false);
-    pros::delay(500);
+    pros::delay(750);
     tilter.set_value(true);
   }
 }
