@@ -11,14 +11,13 @@ Motor leftTop(leftTopPort, false, AbstractMotor::gearset::blue, AbstractMotor::e
 Motor leftBottom(leftBottomPort, true, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
 
 IMU inertialSensor(inertialPort, IMUAxes::z);
-IMU inertialSensor2(inertial2Port, IMUAxes::z);
+IMU inertialSensor2(inertial2Port, IMUAxes::y);
 
 
 typedef struct PID pid;
 pid translate;
 pid park;
 
-int timer;
 double inertial_values;
 double turnError;
 double threshold;
@@ -39,7 +38,7 @@ std::shared_ptr<OdomChassisController> drive =
   .withMotors({leftFront, leftTop, leftBottom}, {rightFront, rightTop, rightBottom})
   .withDimensions(AbstractMotor::gearset::blue, {{4_in, 13.7_in}, imev5BlueTPR})
   .withGains(
-    {0.0015, 0, 0.000085},
+    {0.001, 0, 0.000025},
     {0, 0, 0},
     {0, 0, 0}
   )
@@ -70,7 +69,7 @@ void updateDrive()
     rightBottom.setBrakeMode(AbstractMotor::brakeMode::coast);
   }
 }
-
+/**
 void rotatePID(double angle, int ms)
 {
   inertialSensor.reset();
@@ -106,7 +105,7 @@ void rotatePID(double angle, int ms)
   drive -> getModel() -> tank(0, 0);
 }
 
-void translatePID(double distance, int ms)
+/**void translatePID(double distance, int ms)
 {
 	drive -> getModel() -> setEncoderUnits(AbstractMotor::encoderUnits::degrees);
 
@@ -140,15 +139,15 @@ void translatePID(double distance, int ms)
 	}
 
 	drive -> getModel() -> tank(0, 0);
-}
+}**/
 
 void autonPark()
 {
   inertialSensor2.reset();
 
-  park.kP = 0;
+  park.kP = 0.01;
   park.kI = 0;
-  park.kD = 0;
+  park.kD = 0.0005;
 
   auto parkController = IterativeControllerFactory::posPID(park.kP, park.kI, park.kD);
 
@@ -157,7 +156,7 @@ void autonPark()
     park.error = inertialSensor2.get();
     park.power = parkController.step(park.error);
 
-    drive -> getModel() -> tank(-park.power, -park.power);
+    drive -> getModel() -> tank(park.power, park.power);
 
     pros::delay(10);
   }
