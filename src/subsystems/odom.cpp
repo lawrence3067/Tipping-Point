@@ -5,7 +5,7 @@ using namespace okapi;
 namespace odom
 {
 
-  QVector<QLength> pos; 
+  QVector<QLength> pos;
 	QVector<Number> heading;
 	QAngle curAngle = 90_deg; // for the sake of speed (technically could just use heading, no accuracy loss)
   QAngle turnAngle;
@@ -54,8 +54,16 @@ namespace odom
     }
     else
     {
-      turnAngle = (difference.arg().convert(radian) + PI) * radian; //angled so the back of the bot faces coordinate
+      if (difference.arg().convert(radian) > -PI && difference.arg().convert(radian) < 0)
+      {
+        turnAngle = (difference.arg().convert(radian) + PI) * radian;
+      }
+      else
+      {
+        turnAngle = (difference.arg().convert(radian) - PI) * radian; //angled so the back of the bot faces coordinate
+      }
     }
+    
     QLength targetDistance = difference.norm(); //returns magnitude of vector
 
     odomRotate(turnAngle);
@@ -66,15 +74,14 @@ namespace odom
   {
     targetAngle1 = targetAngle.convert(radian) * 180 / PI; //convert from radian to double
 
-    rotate.kP = 0.032;
-    rotate.kI = 0;
-    rotate.kD = 0.0009;
+    rotate.kP = 0.0328;//0.032
+    rotate.kI = 0.001;
+    rotate.kD = 0.0008;//0.0009
 
     auto rotateController = IterativeControllerFactory::posPID(rotate.kP, rotate.kI, rotate.kD);
 
     while (true)
     {
-      pros::lcd::set_text(3, std::to_string(inertialVal));
       if (inertialSensor.get() < -90 && inertialSensor.get() > -180) //checks if inertial reading is in 3rd quadrant
       {
         inertialVal = 90 - (inertialSensor.get() + 360); //remaps inertial readings to have 0 @ east, PI @ west, -PI/2 @ south
@@ -135,6 +142,10 @@ namespace odom
   		{
   			break;
   		}
+      if (fourBarSwitch.get_new_press() == 1)
+      {
+        fourBarClamp.set_value(true);
+      }
 
       timer += 10;
   		pros::delay(10);

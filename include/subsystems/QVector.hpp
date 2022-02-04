@@ -35,7 +35,6 @@ struct QVector {
 	}; // find magnitude of vector (hypot(x, y) basically gives you sqrt(x^2 + y^2))
 	QAngle arg() {
 		double rv = std::atan2(y.getValue(), x.getValue());
-		if(rv < 0) return (rv + 2 * PI) * radian;
 		return rv * radian;
 	}; // find direction that vector is pointing in
 };

@@ -4,14 +4,17 @@ double difference;
 
 void rightAutonWP()
 {
-  inertialSensor2.reset();
-  pros::c::adi_digital_write(fourBarClampPort, LOW);
-  pros::c::adi_digital_write(tilterPort, HIGH);
-  pros::c::adi_digital_write(tilterClampPort, LOW);
-  translatePID(62, 1500);
-  pros::c::adi_digital_write(fourBarClampPort, HIGH);
-  translatePID(-30, 1000);
-  pros::c::adi_digital_write(fourBarClampPort, LOW);
+  fourBarClamp.set_value(false);
+  tilter.set_value(false);
+  tilterClamp.set_value(true);
+  odom::driveToPoint({0_in, 47_in}, false, 1000);
+  odom::driveToPoint({0_in, 18_in}, true, 1000);
+  fourBarClamp.set_value(false);
+  odom::driveToPoint({0_in, 10_in}, true, 500);
+  odom::driveToPoint({-34_in, 48_in}, false, 2000);
+  odom::driveToPoint({-12_in, 18_in}, true, 1000);
+  fourBarClamp.set_value(false);
+  /**
   translatePID(-15, 1000);
   difference = -40 - inertialSensor2.get();
   rotatePID(difference, 500);
@@ -31,10 +34,11 @@ void rightAutonWP()
   pros::delay(1000);
   conveyor.moveVelocity(-200);
   translatePID(30, 2000);
+  **/
 
 
 }
-
+/**
 void leftAutonWP()
 {
   inertialSensor2.reset();
@@ -115,13 +119,13 @@ void skills(){
   translatePID(100,2000);
   pros::c::adi_digital_write(fourBarClampPort, LOW);
 
-}
+}**/
 
 void test()
 {
   inertialSensor.reset();
   odom::driveToPoint({24_in, 0_in}, false, 1000);
-  odom::driveToPoint({24_in, 24_in}, false, 1000);
+  odom::driveToPoint({24_in, 24_in}, true, 1000);
   odom::driveToPoint({0_in, 24_in}, false, 1000);
-  odom::driveToPoint({0_in, 0_in}, false, 1000);
+  odom::driveToPoint({0_in, 0_in}, true, 1000);
 }

@@ -66,13 +66,13 @@ void competition_initialize() {}
 void autonomous()
 {
 	pros::c::adi_digital_write(tilterClampPort, HIGH);
-	//rightAutonWP();
+	rightAutonWP();
 	//rightAuton();
 
 	//leftAutonWP();
 	//skills();
 	//leftAuton();
-	test();
+	//test();
 }
 
 /**

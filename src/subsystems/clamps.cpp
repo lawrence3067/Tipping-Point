@@ -13,4 +13,4 @@ void updateFourBarClamp()
   {
     fourBarClamp.set_value(false);
   }
-} 
+}
