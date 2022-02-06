@@ -145,6 +145,14 @@ void autonPark()
 {
   inertialSensor2.reset();
 
+  leftFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+  rightFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
   park.kP = 0.01;
   park.kI = 0;
   park.kD = 0.0005;

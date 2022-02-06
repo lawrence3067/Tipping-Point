@@ -63,7 +63,7 @@ namespace odom
         turnAngle = (difference.arg().convert(radian) - PI) * radian; //angled so the back of the bot faces coordinate
       }
     }
-    
+
     QLength targetDistance = difference.norm(); //returns magnitude of vector
 
     odomRotate(turnAngle);
@@ -75,7 +75,7 @@ namespace odom
     targetAngle1 = targetAngle.convert(radian) * 180 / PI; //convert from radian to double
 
     rotate.kP = 0.0328;//0.032
-    rotate.kI = 0.001;
+    rotate.kI = 0.0015;
     rotate.kD = 0.0008;//0.0009
 
     auto rotateController = IterativeControllerFactory::posPID(rotate.kP, rotate.kI, rotate.kD);

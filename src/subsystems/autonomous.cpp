@@ -12,7 +12,7 @@ void rightAutonWP()
   fourBarClamp.set_value(false);
   odom::driveToPoint({0_in, 10_in}, true, 500);
   odom::driveToPoint({-34_in, 48_in}, false, 2000);
-  odom::driveToPoint({-12_in, 18_in}, true, 1000);
+  odom::driveToPoint({-14_in, 18_in}, true, 1000);
   fourBarClamp.set_value(false);
   /**
   translatePID(-15, 1000);
