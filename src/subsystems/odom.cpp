@@ -45,7 +45,7 @@ namespace odom
   	rPrev = drive -> getModel() -> getSensorVals()[1] * 18 / 35;
   }
 
-  void driveToPoint(Point target, bool driveBack, int ms)
+  void driveToPoint(Point target, bool driveBack, int ms, int rotateMs)
   {
     QVector<QLength> difference = QVector(target.x, target.y) - pos;
     if (driveBack == false)
@@ -66,21 +66,22 @@ namespace odom
 
     QLength targetDistance = difference.norm(); //returns magnitude of vector
 
-    odomRotate(turnAngle);
+    odomRotate(turnAngle, rotateMs);
     odomTranslate(targetDistance, driveBack, ms);
   }
 
-  void odomRotate(QAngle targetAngle)
+  void odomRotate(QAngle targetAngle, int ms)
   {
+    timer = 0;
     targetAngle1 = targetAngle.convert(radian) * 180 / PI; //convert from radian to double
 
     rotate.kP = 0.0328;//0.032
-    rotate.kI = 0.0015;
+    rotate.kI = 0.002;
     rotate.kD = 0.0008;//0.0009
 
     auto rotateController = IterativeControllerFactory::posPID(rotate.kP, rotate.kI, rotate.kD);
 
-    while (true)
+    while (timer < ms)
     {
       if (inertialSensor.get() < -90 && inertialSensor.get() > -180) //checks if inertial reading is in 3rd quadrant
       {
@@ -96,12 +97,14 @@ namespace odom
       drive -> getModel() -> tank(rotate.power, -rotate.power);
       update();
 
-      if (abs(targetAngle1 - inertialVal) < 2 && rightFront.getActualVelocity() < 1 && rightTop.getActualVelocity() < 1
+      if (abs(targetAngle1 - inertialVal) < 3 && rightFront.getActualVelocity() < 1 && rightTop.getActualVelocity() < 1
         && rightBottom.getActualVelocity() < 1 && leftFront.getActualVelocity() < 1 && leftTop.getActualVelocity() < 1
         && leftBottom.getActualVelocity() < 1)
       {
         break;
       }
+      timer += 10;
+
       pros::delay(10);
     }
 
@@ -145,6 +148,7 @@ namespace odom
       if (fourBarSwitch.get_new_press() == 1)
       {
         fourBarClamp.set_value(true);
+        break;
       }
 
       timer += 10;

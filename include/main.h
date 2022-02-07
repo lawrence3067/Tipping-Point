@@ -84,7 +84,6 @@ void opcontrol(void);
  #include "subsystems/ports.hpp"
  #include "subsystems/globals.hpp"
  #include "subsystems/autonomous.hpp"
- #include "subsystems/visionSensor.hpp"
  #include "subsystems/odom.hpp"
 //#include <iostream>
 #endif

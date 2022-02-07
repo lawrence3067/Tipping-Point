@@ -16,6 +16,4 @@ extern IMU inertialSensor2;
 extern std::shared_ptr<OdomChassisController> drive;
 
 void updateDrive();
-void rotatePID(double angle, int ms);
-void translatePID(double distance, int ms);
 void autonPark();

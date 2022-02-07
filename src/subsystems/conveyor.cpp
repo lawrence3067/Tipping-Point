@@ -2,7 +2,7 @@
 
 using namespace okapi;
 
-Motor conveyor(conveyorPort, false, AbstractMotor::gearset::blue, AbstractMotor::encoderUnits::degrees);
+Motor conveyor(conveyorPort, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
 int conveyorState;
 
