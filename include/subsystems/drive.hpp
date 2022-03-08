@@ -13,7 +13,8 @@ extern Motor leftBottom;
 extern IMU inertialSensor;
 extern IMU inertialSensor2;
 
-extern std::shared_ptr<OdomChassisController> drive;
+extern std::shared_ptr<ChassisController> drive;
 
 void updateDrive();
+
 void autonPark();

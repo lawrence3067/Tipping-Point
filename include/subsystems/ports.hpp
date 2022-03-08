@@ -2,10 +2,10 @@
 
 //drivetrain ports
 const int rightFrontPort = 21;
-const int rightTopPort = 12;
+const int rightTopPort = 6;
 const int rightBottomPort = 3;
 
-const int leftFrontPort = 20;
+const int leftFrontPort = 18;
 const int leftTopPort = 9;
 const int leftBottomPort = 2;
 
@@ -16,10 +16,10 @@ const int fourBarPort = 1;
 const int conveyorPort = 13;
 
 //sensor ports
-const int inertialPort = 6;
-const int inertial2Port = 5;
-const char fourBarSwitchPort = 'D';
-const char fourBarSwitchPort2 = 'E';
+const int inertialPort = 14;
+const int inertial2Port = 17;
+const char fourBarSwitchPort = 'G';
+const char fourBarSwitchPort2 = 'H';
 
 //pneumatic ports
 const char fourBarClampPort = 'A';

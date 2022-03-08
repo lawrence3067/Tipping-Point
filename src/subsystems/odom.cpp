@@ -7,12 +7,11 @@ namespace odom
 
   QVector<QLength> pos;
 	QVector<Number> heading;
-	QAngle curAngle = 90_deg; // for the sake of speed (technically could just use heading, no accuracy loss)
+	QAngle curAngle = 90_deg;
   QAngle turnAngle;
 
 	double rPrev;
 	double lPrev;
-	double mPrev;
   int timer;
   double inertialVal;
   double targetAngle1;
@@ -27,7 +26,6 @@ namespace odom
     QLength distR = 2_in * (drive -> getModel() -> getSensorVals()[1] * 18 / 35 - rPrev) / 180.0 * PI;
 
     QLength forward = (distL + distR) / 2;
-    //QAngle dtheta = (distR - distL) / 13.7_in * radian; // small angle
 
     //update pos
     pos += forward * heading;
@@ -75,9 +73,9 @@ namespace odom
     timer = 0;
     targetAngle1 = targetAngle.convert(radian) * 180 / PI; //convert from radian to double
 
-    rotate.kP = 0.0328;//0.032
+    rotate.kP = 0.0328;
     rotate.kI = 0.002;
-    rotate.kD = 0.0008;//0.0009
+    rotate.kD = 0.0008;
 
     auto rotateController = IterativeControllerFactory::posPID(rotate.kP, rotate.kI, rotate.kD);
 
@@ -143,11 +141,19 @@ namespace odom
         && rightBottom.getActualVelocity() < 1 && leftFront.getActualVelocity() < 1
         && leftTop.getActualVelocity() < 1 && leftBottom.getActualVelocity() < 1)
   		{
+        leftFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+        leftTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+        leftBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+        rightFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+        rightTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+        rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
   			break;
   		}
-      if (fourBarSwitch.get_new_press() == 1)
+      if (fourBarSwitch.get_new_press() == 1 || fourBarSwitch2.get_new_press() == 1)
       {
         fourBarClamp.set_value(true);
+        pros::delay(250);
         break;
       }
 
@@ -155,7 +161,14 @@ namespace odom
   		pros::delay(10);
   	}
 
-  	drive -> getModel() -> tank(0, 0);
+    leftFront.moveVelocity(0);
+    leftTop.moveVelocity(0);
+    leftBottom.moveVelocity(0);
+    rightFront.moveVelocity(0);
+    rightTop.moveVelocity(0);
+    rightBottom.moveVelocity(0);
+
+  	drive -> getModel() -> arcade(0, 0);
     update();
   }
 }

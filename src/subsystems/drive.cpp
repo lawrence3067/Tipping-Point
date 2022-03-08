@@ -13,32 +13,14 @@ Motor leftBottom(leftBottomPort, true, AbstractMotor::gearset::blue, AbstractMot
 IMU inertialSensor(inertialPort, IMUAxes::z);
 IMU inertialSensor2(inertial2Port, IMUAxes::y);
 
-
 typedef struct PID pid;
-pid translate;
 pid park;
 
-double inertial_values;
-double turnError;
-double threshold;
-double integral;
-double derivative;
-double prevError;
-double kP;
-double ki;
-double kd;
-double p;
-double i;
-double d;
-double vel;
-double addValue;
-
-std::shared_ptr<OdomChassisController> drive =
+std::shared_ptr<ChassisController> drive =
   ChassisControllerBuilder()
   .withMotors({leftFront, leftTop, leftBottom}, {rightFront, rightTop, rightBottom})
   .withDimensions(AbstractMotor::gearset::blue, {{4_in, 13.7_in}, imev5BlueTPR})
-  .withOdometry()
-  .buildOdometry();
+  .build();
 
 void updateDrive()
 {
@@ -64,7 +46,7 @@ void updateDrive()
     rightBottom.setBrakeMode(AbstractMotor::brakeMode::coast);
   }
 }
-
+/**
 void autonPark()
 {
   inertialSensor2.reset();
@@ -94,4 +76,4 @@ void autonPark()
   }
 
   drive -> getModel() -> tank(0,0);
-}
+}**/

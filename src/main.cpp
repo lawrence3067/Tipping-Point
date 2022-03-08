@@ -49,7 +49,13 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize()
+{
+	while(true)
+	{
+		fourBarLift.moveVelocity(fourBarMacros(-10));
+	}
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -69,9 +75,7 @@ void autonomous()
 	//rightAuton();
 
 	//leftAutonWP();
-	//skills();
 	//leftAuton();
-	//test();
 }
 
 /**
@@ -91,6 +95,7 @@ void opcontrol()
 {
 	//autonPark();
 	//test();
+	//skills();
 	while (true)
 	{
 		updateDrive();

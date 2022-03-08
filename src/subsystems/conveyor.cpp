@@ -8,11 +8,11 @@ int conveyorState;
 
 void updateConveyor()
 {
-  if (controller.getDigital(ControllerDigital::R1) == 1)
+  if (controller.getDigital(ControllerDigital::R2) == 1)
   {
     conveyorState = 1;
   }
-  else if (controller.getDigital(ControllerDigital::R2) == 1)
+  else if (controller.getDigital(ControllerDigital::R1) == 1)
   {
     conveyorState = 2;
   }
