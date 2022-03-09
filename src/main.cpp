@@ -93,9 +93,6 @@ void autonomous()
  */
 void opcontrol()
 {
-	//autonPark();
-	//test();
-	//skills();
 	while (true)
 	{
 		updateDrive();

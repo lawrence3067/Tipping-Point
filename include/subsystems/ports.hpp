@@ -6,7 +6,7 @@ const int rightTopPort = 6;
 const int rightBottomPort = 3;
 
 const int leftFrontPort = 18;
-const int leftTopPort = 9;
+const int leftTopPort = 10;
 const int leftBottomPort = 2;
 
 //lift port
