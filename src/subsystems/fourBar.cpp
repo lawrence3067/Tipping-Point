@@ -5,7 +5,6 @@ using namespace okapi;
 Motor fourBarLift(fourBarPort, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
 
 int liftState;
-int rollerState;
 double fourBarPower;
 double error;
 auto fourBarController = IterativeControllerFactory::posPID(0.5, 0, 0.001);//1.4, 0, 0.003
@@ -36,38 +35,17 @@ void updateFourBar()
     liftState = 3;
   }
 
-  if (controller[ControllerDigital::right].changed() == 1)
-  {
-    if (rollerState == 1)
-    {
-      rollerState = 0;
-    }
-    else
-    {
-      rollerState = 1;
-    }
-  }
-
 
   switch (liftState)
   {
     case 1:
       fourBarLift.moveVelocity(fourBarMacros(600));
-      if (rollerState == 1)
-      {
-        conveyor.moveVelocity(600);
-      }
       break;
     case 2:
       fourBarLift.moveVelocity(fourBarMacros(-10));
-      conveyor.moveVelocity(0);
       break;
     case 3:
       fourBarLift.moveVelocity(fourBarMacros(250));
-      if (rollerState == 1)
-      {
-        conveyor.moveVelocity(600);
-      }
       break;
   }
 }

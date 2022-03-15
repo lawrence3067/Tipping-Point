@@ -29,6 +29,7 @@ void initialize()
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	inertialSensor.calibrate();
+	inertialSensor2.calibrate();
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -71,8 +72,8 @@ void competition_initialize()
 void autonomous()
 {
 	pros::c::adi_digital_write(tilterClampPort, HIGH);
-	rightAutonWP();
-	//rightAuton();
+	//middleStar();
+	rightLine();
 
 	//leftAutonWP();
 	//leftAuton();

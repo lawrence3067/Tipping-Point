@@ -1,50 +1,110 @@
 #include "main.h"
 
-void rightAutonWP()
+double difference;
+
+void rightLine()
 {
+  leftFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+  rightFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
   inertialSensor.reset();
+  inertialSensor2.reset();
+
   fourBarClamp.set_value(true);
   tilter.set_value(true);
   tilterClamp.set_value(false);
-  odom::driveToPoint({0_in, 54_in}, false, 1500, 1);
-  fourBarClamp.set_value(false);
-  odom::driveToPoint({0_in, 15_in}, true, 20000, 500);
-  /**
-  fourBarLift.moveVelocity(fourBarMacros(0));
-  fourBarClamp.set_value(true);
-  odom::driveToPoint({0_in, 10_in}, true, 400, 500);
-  pros::delay(500);
-  odom::driveToPoint({-32_in, 48_in}, false, 2000, 500);
-  fourBarClamp.set_value(false);
-  odom::driveToPoint({-13_in, 17_in}, true, 1000, 200);
-  fourBarClamp.set_value(true);
-  odom::driveToPoint({0_in, 13_in}, true, 1000, 1000);
-  fourBarLift.moveVelocity(fourBarMacros(0));
-  odom::driveToPoint({0_in, 28_in}, false, 1000, 1000);
-  fourBarClamp.set_value(false);**/
-  pros::delay(500);
-  odom::driveToPoint({14_in, 16_in}, true, 1000, 1000);
+  translatePID(60, 2000, true);
+  translatePID(-28, 1500, false);
+  difference = -90 - inertialSensor2.get();
+  rotatePID(difference, 1000);
+  translatePID(-30, 1000, false);
   tilterClamp.set_value(true);
   pros::delay(500);
   tilter.set_value(false);
-  conveyor.moveVelocity(-200);
-  odom::driveToPoint({-15_in, 13_in}, false, 1000, 1000);
+  translatePID(12, 700, false);
+  fourBarLift.moveVelocity(200);
+  difference = 92 - inertialSensor2.get();
+  rotatePID(difference, 1000);
+  conveyor.moveVelocity(600);
+  translateBitch(30, 5000, false);
+  tilter.set_value(true);
+  translatePID(-40, 1000, false);
 }
 
-void leftAutonWP()
+void middleStar()
 {
-  fourBarClamp.set_value(false);
-  fourBarLift.moveVelocity(fourBarMacros(-10));
-  odom::driveToPoint({0_in, 50_in}, false, 1000, 1);
+  leftFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+  rightFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+  inertialSensor.reset();
+  inertialSensor2.reset();
+
   fourBarClamp.set_value(true);
-  //odom::driveToPoint({0_in, 18_in}, true, 1000, 100);
-  odom::driveToPoint({0_in, 3_in}, true, 1000, 100);
-  //odom::driveToPoint({38_in, 65_in}, false, 1500, 1000);
-  //odom::driveToPoint({0_in, 15_in}, true, 1000, 1000);
-  //odom::driveToPoint({0_in, 0_in}, true, 1000, 1000);
-  odom::driveToPoint({12_in, -2_in}, true, 1000, 1000);
+  tilter.set_value(true);
+  tilterClamp.set_value(false);
+  /**
+  translatePID(70, 2000, true);
+  translatePID(-33, 2000, false);
+  difference = -55 - inertialSensor2.get();
+  rotatePID(difference, 1000);
+  translatePID(-35, 2000, false);
   tilterClamp.set_value(true);
   pros::delay(500);
   tilter.set_value(false);
-  conveyor.moveVelocity(200);
+  fourBarLift.moveVelocity(200);
+  difference = -45 - inertialSensor2.get();
+  rotatePID(difference, 1000);
+  conveyor.moveVelocity(600);
+  translateBitch(20, 5000, false);**/
+  odom::driveToPoint({-35_in, 48_in}, false, 1500, 1000, true);
+  odom::driveToPoint({-20_in, 19_in}, true, 1000, 1000, false);
+  conveyor.moveVelocity(600);
+  odom::driveToPoint({20_in, 19_in}, true, 2000, 1000, false);
+  tilterClamp.set_value(true);
+  pros::delay(500);
+  tilter.set_value(false);
+  fourBarLift.moveVelocity(200);
+  conveyor.moveVelocity(600);
+  rotatePID(-55, 1000);
+  translateBitch(35, 3000, false);
+  translatePID(-15, 1000, false);
+  translateBitch(15, 3000, false);
+  translatePID(-15, 1000, false);
+  translateBitch(15, 3000, false);
+
+}
+void leftAutonWP()
+{
+  leftFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  leftBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+
+  rightFront.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightTop.setBrakeMode(AbstractMotor::brakeMode::hold);
+  rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
+  inertialSensor.reset();
+  inertialSensor2.reset();
+
+  fourBarClamp.set_value(true);
+  tilter.set_value(true);
+  tilterClamp.set_value(false);
+
+  translatePID(65, 2000, true);
+  pros::delay(100);
+  translatePID(-47, 2000, false);
+  rotatePID(-77, 1000);
+  translatePID(-15, 1000, false);
+  conveyor.moveVelocity(600);
+  pros::delay(1000);
+  tilterClamp.set_value(true);
+  pros::delay(500);
+  tilter.set_value(false);
 }

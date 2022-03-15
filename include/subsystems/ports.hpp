@@ -2,7 +2,7 @@
 
 //drivetrain ports
 const int rightFrontPort = 21;
-const int rightTopPort = 6;
+const int rightTopPort = 4;
 const int rightBottomPort = 3;
 
 const int leftFrontPort = 18;

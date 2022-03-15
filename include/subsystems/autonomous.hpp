@@ -2,8 +2,8 @@
 
 using namespace okapi;
 
-void rightAutonWP();
-void rightAuton();
+void rightLine();
+void middleStar();
 
 void leftAutonWP();
 void leftAuton();

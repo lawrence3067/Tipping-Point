@@ -43,7 +43,7 @@ namespace odom
   	rPrev = drive -> getModel() -> getSensorVals()[1] * 18 / 35;
   }
 
-  void driveToPoint(Point target, bool driveBack, int ms, int rotateMs)
+  void driveToPoint(Point target, bool driveBack, int ms, int rotateMs, bool clamp)
   {
     QVector<QLength> difference = QVector(target.x, target.y) - pos;
     if (driveBack == false)
@@ -65,7 +65,7 @@ namespace odom
     QLength targetDistance = difference.norm(); //returns magnitude of vector
 
     odomRotate(turnAngle, rotateMs);
-    odomTranslate(targetDistance, driveBack, ms);
+    odomTranslate(targetDistance, driveBack, ms, clamp);
   }
 
   void odomRotate(QAngle targetAngle, int ms)
@@ -109,7 +109,7 @@ namespace odom
     drive -> getModel() -> tank(0, 0);
   }
 
-  void odomTranslate(QLength targetDistance, bool driveBack, int ms)
+  void odomTranslate(QLength targetDistance, bool driveBack, int ms, bool clamp)
   {
     double targetDegrees = (targetDistance.convert(inch) * 90 / PI) * 35/18;
 
@@ -150,25 +150,36 @@ namespace odom
         rightBottom.setBrakeMode(AbstractMotor::brakeMode::hold);
   			break;
   		}
-      if (fourBarSwitch.get_new_press() == 1 || fourBarSwitch2.get_new_press() == 1)
+      if (clamp == true)
       {
-        fourBarClamp.set_value(true);
-        pros::delay(250);
-        break;
+        if (fourBarSwitch.get_new_press() == 1 || fourBarSwitch2.get_new_press() == 1)
+        {
+          fourBarClamp.set_value(false);
+          break;
+        }
       }
 
       timer += 10;
   		pros::delay(10);
   	}
 
-    leftFront.moveVelocity(0);
-    leftTop.moveVelocity(0);
-    leftBottom.moveVelocity(0);
-    rightFront.moveVelocity(0);
-    rightTop.moveVelocity(0);
-    rightBottom.moveVelocity(0);
+    drive -> getModel() -> tank(0, 0);
+    update();
+  }
 
-  	drive -> getModel() -> arcade(0, 0);
+  void mogoRush()
+  {
+    while(true)
+    {
+      drive -> getModel() -> tank(1, 1);
+      if (fourBarSwitch.get_new_press() == 1 || fourBarSwitch2.get_new_press() == 1)
+      {
+        fourBarClamp.set_value(false);
+        pros::delay(250);
+        break;
+      }
+    }
+    drive -> getModel() -> tank(0, 0);
     update();
   }
 }
