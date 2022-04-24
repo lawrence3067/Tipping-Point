@@ -30,7 +30,7 @@ void rightLine()
   difference = 92 - inertialSensor2.get();
   rotatePID(difference, 1000);
   conveyor.moveVelocity(600);
-  translateBitch(30, 5000, false);
+  translateJank(30, 5000, false);
   tilter.set_value(true);
   translatePID(-40, 1000, false);
 }
@@ -63,7 +63,7 @@ void middleStar()
   difference = -45 - inertialSensor2.get();
   rotatePID(difference, 1000);
   conveyor.moveVelocity(600);
-  translateBitch(20, 5000, false);**/
+  translateJank(20, 5000, false);**/
   odom::driveToPoint({-35_in, 48_in}, false, 1500, 1000, true);
   odom::driveToPoint({-20_in, 19_in}, true, 1000, 1000, false);
   conveyor.moveVelocity(600);
@@ -74,11 +74,11 @@ void middleStar()
   fourBarLift.moveVelocity(200);
   conveyor.moveVelocity(600);
   rotatePID(-55, 1000);
-  translateBitch(35, 3000, false);
+  translateJank(35, 3000, false);
   translatePID(-15, 1000, false);
-  translateBitch(15, 3000, false);
+  translateJank(15, 3000, false);
   translatePID(-15, 1000, false);
-  translateBitch(15, 3000, false);
+  translateJank(15, 3000, false);
 
 }
 void leftAutonWP()
