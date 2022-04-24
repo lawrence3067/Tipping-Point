@@ -128,7 +128,7 @@ void rotatePID(double targetAngle, int ms)
   drive -> getModel() -> tank(0, 0);
 }
 
-void translateBitch(double targetDistance, int ms, bool clamp)
+void translateJank(double targetDistance, int ms, bool clamp)
 {
   translate1.target = targetDistance * (360 / (2 * 3.1415 * (4 / 2)));
 
